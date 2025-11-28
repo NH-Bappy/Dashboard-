@@ -76,11 +76,11 @@ const data = {
       items: [
         {
           title: "Create-subcategory",
-          url: "#",
+          url: "create-subcategory",
         },
         {
           title: "Subcategory List",
-          url: "#",
+          url: "subcategory-list",
         },
       ],
     },

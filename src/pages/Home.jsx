@@ -13,9 +13,13 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 
 export default function Home() {
+
+  const { pathname } = useLocation();
+  // console.log(pathname.split("/")[1]);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -30,13 +34,13 @@ export default function Home() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
+                  <BreadcrumbLink href="/">
+                    Home
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>{pathname.split("/")[1]}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -44,7 +48,7 @@ export default function Home() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min">
-          <Outlet/>
+            <Outlet />
           </div>
         </div>
       </SidebarInset>
