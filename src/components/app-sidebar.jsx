@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   AudioWaveform,
+  BetweenHorizontalEnd,
   BookOpen,
   Bot,
   Command,
@@ -29,13 +30,13 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "end",
+    email: "hnaimul302@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Voltora",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
@@ -52,67 +53,54 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Category",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Create-category",
+          url: "create-category",
+        },
+        {
+          title: "Category List",
+          url: "category-list",
+        },
+      ],
+    },
+    {
+      title: "Subcategory",
+      url: "#",
+      icon: BetweenHorizontalEnd,
+      isActive: true,
+      items: [
+        {
+          title: "Create-subcategory",
           url: "#",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
+          title: "Subcategory List",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Brand",
       url: "#",
       icon: Bot,
+      isActive: true,
       items: [
         {
-          title: "Genesis",
+          title: "Create-Brand",
           url: "#",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Brand List",
           url: "#",
         },
       ],
     },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
+
     {
       title: "Settings",
       url: "#",
@@ -154,7 +142,7 @@ const data = {
       icon: Map,
     },
   ],
-}
+};
 
 export function AppSidebar({
   ...props
