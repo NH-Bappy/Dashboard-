@@ -10,7 +10,7 @@ const api = axios.create({
 //
 
 // Add a request interceptor
-axios.interceptors.request.use(function (config) {
+api.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
 }, function (error) {
@@ -20,7 +20,7 @@ axios.interceptors.request.use(function (config) {
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+api.interceptors.response.use(
     (res) => res,
     async (error) => {
         try {

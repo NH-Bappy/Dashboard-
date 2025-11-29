@@ -2,13 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { email, z } from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,85 +15,77 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-
-// define the from schema
+// ---- Zod Schema ----
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Category name must be at least 2 characters.",
   }),
-  email: z.string().email({
-    message: "Invalid email address"
+  image: z.instanceof(File, {
+    message: "Image is required",
   }),
-  password: z.string().min(6 ,{
-    message: "password must be at least 6 characters"
-  })
 });
 
 export function CreateCategory() {
-  // ...
-  // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      password: "",
+      name: "",
+      image: undefined,
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log("Submitting category:", values);
+
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("image", values.image);
+
+    // Example: send to backend
+    // await axios.post("/api/category", formData)
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Name */}
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Category Name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Enter category name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
+        {/* Image */}
         <FormField
           control={form.control}
-          name="email"
+          name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>email</FormLabel>
+              <FormLabel>Category Image</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    field.onChange(file); // store file in RHF
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>password</FormLabel>
-              <FormControl>
-                <Input type='password'{...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Create Category</Button>
       </form>
     </Form>
   );
