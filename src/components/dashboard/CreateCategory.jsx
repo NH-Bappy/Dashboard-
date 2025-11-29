@@ -14,6 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { api } from "../../helpers/Axios";
+import { useState } from "react";
 
 // ---- Zod Schema ----
 const formSchema = z.object({
@@ -27,7 +29,7 @@ const formSchema = z.object({
 
 export function CreateCategory() {
 
-
+const [loading , setLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -38,7 +40,7 @@ export function CreateCategory() {
   });
 
   async function onSubmit(values) {
-    console.log("Submitting category:", values);
+    // console.log("Submitting category:", values);
 
 
 
@@ -49,17 +51,30 @@ export function CreateCategory() {
     formData.append("name", values.name);
     formData.append("image", values.image);
 
-    console.log(formData.get("image"));
+    // console.log(formData.get("image"));
     // console.log(formData.get("name"));
 
     // Example: send to backend
     try {
+      setLoading(true);
       const sendToBackend = await api.post(
-        "category/create-category",
-        formData
+        "/category/create-category",
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${"h43646tffks94384rijf"}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+      // console.log(sendToBackend);
+      if(sendToBackend.status == 201){
+        console.log(sendToBackend.data)
+      }
     } catch (error) {
-      
+      console.log(error)
+    }finally{
+      setLoading(false);
     }
     
   }
@@ -104,7 +119,7 @@ export function CreateCategory() {
           )}
         />
 
-        <Button type="submit">Create Category</Button>
+        <Button type="submit">{loading ? "loading..." : "create-category"}</Button>
       </form>
     </Form>
   );
