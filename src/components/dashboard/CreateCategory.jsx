@@ -26,6 +26,9 @@ const formSchema = z.object({
 });
 
 export function CreateCategory() {
+
+
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,15 +37,31 @@ export function CreateCategory() {
     },
   });
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log("Submitting category:", values);
 
+
+
+
+
+    // this is using for converting data into from data
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("image", values.image);
 
+    console.log(formData.get("image"));
+    // console.log(formData.get("name"));
+
     // Example: send to backend
-    // await axios.post("/api/category", formData)
+    try {
+      const sendToBackend = await api.post(
+        "category/create-category",
+        formData
+      );
+    } catch (error) {
+      
+    }
+    
   }
 
   return (

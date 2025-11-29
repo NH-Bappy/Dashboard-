@@ -3,13 +3,14 @@ import axios from "axios";
 
 
 const api = axios.create({
-    baseURL: 'https://some-domain.com/api/',
+    baseURL: `${import.meta.env.VITE_BASE_DOMAIN}/${import.meta.env.VITE_BASE_URL}`,
 });
 
 
 //
 
 // Add a request interceptor
+
 api.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
@@ -20,12 +21,16 @@ api.interceptors.request.use(function (config) {
 );
 
 // Add a response interceptor
-api.interceptors.response.use(
-    (res) => res,
-    async (error) => {
-        try {
 
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    });
+// api.interceptors.response.use(
+//     (res) => res,
+//     async (error) => {
+//         try {
+
+//         } catch (error) {
+//             return Promise.reject(error);
+//         }
+//     });
+
+
+export {api};
