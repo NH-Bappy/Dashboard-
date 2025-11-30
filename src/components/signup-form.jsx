@@ -18,6 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { api } from "../helpers/Axios";
 
 export function SignupForm({ ...props }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -121,17 +122,22 @@ export function SignupForm({ ...props }) {
       password: formData.password,
     };
 
-
     try {
-      const res = await api.post("/api/v1/auth/registration", submissionData, {
+      const res = await api.post("/auth/registration", submissionData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      // if(res.status == 201){
+
+      // }
+      console.log("Registration data:", res);
     } catch (error) {
-      
+      navigate('/login');
+      console.log(error);
     }
-    console.log("Form submission data:", submissionData);
+    // console.log("Form submission data:", submissionData);
     // Here you would typically send the data to your API
   };
 
