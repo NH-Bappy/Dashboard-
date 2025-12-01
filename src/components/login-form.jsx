@@ -16,8 +16,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { api } from "../helpers/Axios";
+import { Link, useNavigate } from "react-router";
 
 export function LoginForm({ className, ...props }) {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 
   // backend states
@@ -33,8 +36,18 @@ export function LoginForm({ className, ...props }) {
       password:password
     }
 
+    try {
+      const res = await api.post("/auth/login", data);
+      if (res.statusText == "OK") {
+          // console.log(res.data.data.accessToken);
+          localStorage.setItem("accessToken", res.data.data.accessToken);
+          navigate("/")
+      };
+    } catch (error) {
+      console.log("error from login",error)
+    }
 
-    console.log(data);
+    // console.log(data);
   };
 
 
@@ -110,7 +123,7 @@ export function LoginForm({ className, ...props }) {
                 </Button>
 
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <Link to="/SingUp">Sing up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>
