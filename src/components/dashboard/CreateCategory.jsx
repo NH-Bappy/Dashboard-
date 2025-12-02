@@ -59,13 +59,7 @@ const [loading , setLoading] = useState(false);
       setLoading(true);
       const sendToBackend = await api.post(
         "/category/create-category",
-        formData,
-        {
-          headers: {
-            authorization: `Bearer ${"h43646tffks94384rijf"}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
       // console.log(sendToBackend);
       if(sendToBackend.status == 201){

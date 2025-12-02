@@ -12,14 +12,31 @@ const api = axios.create({
 
 // Add a request interceptor
 
-api.interceptors.request.use(function (config) {
-    // Do something before request is sent
-    return config;
-}, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-},
+api.interceptors.request.use(
+    function (config) {
+        // Skip auth for login or registration
+        if (
+            config.url.includes("/auth/login") ||
+            config.url.includes("/auth/registration")
+        ) {
+            return config;
+        }
+
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) {
+            console.warn("Token missing");
+            return config; // do NOT throw error here
+        }
+
+        config.headers.Authorization = `Bearer ${accessToken}`;
+        return config;
+    },
+    function (error) {
+        return Promise.reject(error);
+    }
 );
+
 
 // Add a response interceptor
 
