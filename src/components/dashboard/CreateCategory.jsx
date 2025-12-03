@@ -28,8 +28,7 @@ const formSchema = z.object({
 });
 
 export function CreateCategory() {
-
-const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -41,10 +40,6 @@ const [loading , setLoading] = useState(false);
 
   async function onSubmit(values) {
     // console.log("Submitting category:", values);
-
-
-
-
 
     // this is using for converting data into from data
     const formData = new FormData();
@@ -62,15 +57,18 @@ const [loading , setLoading] = useState(false);
         formData
       );
       // console.log(sendToBackend);
-      if(sendToBackend.status == 201){
-        console.log(sendToBackend.data)
+      if (sendToBackend.status == 201) {
+        console.log(sendToBackend.data);
       }
     } catch (error) {
-      console.log(error)
-    }finally{
+      if (error.response?.status === 401) {
+        console.log("You must login first!");
+      } else {
+        console.log(error.response?.data?.message || "Something went wrong");
+      }
+    } finally {
       setLoading(false);
     }
-    
   }
 
   return (
@@ -113,7 +111,9 @@ const [loading , setLoading] = useState(false);
           )}
         />
 
-        <Button type="submit">{loading ? "loading..." : "create-category"}</Button>
+        <Button type="submit">
+          {loading ? "loading..." : "create-category"}
+        </Button>
       </form>
     </Form>
   );

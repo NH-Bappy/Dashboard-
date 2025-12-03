@@ -1,20 +1,16 @@
 import axios from "axios";
 
-
-
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_BASE_DOMAIN}/${import.meta.env.VITE_BASE_URL}`,
-    withCredentials:true
+    withCredentials: true
 });
 
-
-//
-
-// Add a request interceptor
-
+// =============================
+// REQUEST INTERCEPTOR
+// =============================
 api.interceptors.request.use(
     function (config) {
-        // Skip auth for login or registration
+        // Skip auth token for login or registration
         if (
             config.url.includes("/auth/login") ||
             config.url.includes("/auth/registration")
@@ -25,8 +21,8 @@ api.interceptors.request.use(
         const accessToken = localStorage.getItem("accessToken");
 
         if (!accessToken) {
-            console.warn("Token missing");
-            return config; // do NOT throw error here
+            console.warn("Token is missing");
+            return config;
         }
 
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -37,18 +33,24 @@ api.interceptors.request.use(
     }
 );
 
+// =============================
+// RESPONSE INTERCEPTOR
+// =============================
+api.interceptors.response.use(
+    (res) => res,
+    (error) => {
+        const status = error.response?.status;
 
-// Add a response interceptor
+        if (status === 401) {
+            console.warn("Unauthorized: Please login first.");
+            console.log("You are not logged in. Please login first.");
 
-// api.interceptors.response.use(
-//     (res) => res,
-//     async (error) => {
-//         try {
+            // Optional redirect
+            // window.location.href = "/login";
+        }
 
-//         } catch (error) {
-//             return Promise.reject(error);
-//         }
-//     });
+        return Promise.reject(error);
+    }
+);
 
-
-export {api};
+export { api };
