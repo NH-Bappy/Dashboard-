@@ -13,61 +13,146 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { api } from "../../helpers/Axios";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
+  const [selectedCat, setSelectedCat] = useState(null);
+  const [newName, setNewName] = useState("");
+  const [newImage, setNewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
-useEffect(() => {
-  const abort = new AbortController();
-  const fetchCategories = async () => {
-    try {
-      const res = await api.get("/category/find-all-category", {
-        signal: abort.signal,
-      });
+  const [open, setOpen] = useState(false);
 
-      
-      console.log("category data" , res.data);
+  // Fetch categories
+  useEffect(() => {
+    const abort = new AbortController();
 
-      setCategories(res.data.data)
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/category/find-all-category", {
+          signal: abort.signal,
+        });
 
-    } catch (error) {
-      if (error.name === "CanceledError") {
-        console.log("Request aborted");
-      } else {
-        console.log("Error from category list:", error);
+        setCategories(res.data.data);
+      } catch (error) {
+        if (error.name !== "CanceledError") {
+          console.log("Error from category list:", error);
+        }
       }
+    };
+
+    fetchCategories();
+    return () => abort.abort();
+  }, []);
+
+  // Load selected category into modal
+  useEffect(() => {
+    if (selectedCat) {
+      setNewName(selectedCat.name);
+      setPreviewImage(selectedCat.image);
+    }
+  }, [selectedCat]);
+
+  // DELETE
+  const handleDelete = async (slug) => {
+    try {
+      await api.delete(`/category/remove-category/${slug}`);
+      setCategories((prev) => prev.filter((cat) => cat.slug !== slug));
+    } catch (error) {
+      console.log("Delete error:", error);
     }
   };
-  fetchCategories();
-  return () => abort.abort();
-}, []);
 
+  // IMAGE CHANGE
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setNewImage(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
 
+  // UPDATE
+  const handleUpdate = async () => {
+    if (!selectedCat) return;
 
+    const formData = new FormData();
+    formData.append("name", newName);
+    if (newImage) formData.append("image", newImage);
 
+    try {
+      const res = await api.put(
+        `/category/edit-category/${selectedCat.slug}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-const handleDelete = async (slug) => {
-  try {
-    const deleteResponse = await api.delete(
-      `/category/remove-category/${slug}`
-    );
-    console.log("delete category:", deleteResponse);
+      setCategories((prev) =>
+        prev.map((item) =>
+          item.slug === selectedCat.slug ? res.data.data : item
+        )
+      );
 
-    // Remove deleted item from UI
-    setCategories((prev) => prev.filter((cat) => cat.slug !== slug));
-  } catch (error) {
-    console.log("Delete error:", error);
-  }
-};
-
+      setOpen(false);
+      setSelectedCat(null);
+      setNewName("");
+      setNewImage(null);
+      setPreviewImage(null);
+    } catch (error) {
+      console.log("Update error:", error);
+    }
+  };
 
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-4">Category List</h2>
 
+      {/* SINGLE DIALOG OUTSIDE THE MAP */}
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            document.activeElement?.blur();
+          }
+          setOpen(isOpen);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Category</DialogTitle>
+            <DialogDescription>
+              Update your category information from here.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <input
+              type="text"
+              className="border p-2 w-full rounded"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+
+            {previewImage && (
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="w-full rounded border"
+              />
+            )}
+
+            <Button onClick={handleUpdate}>Save Changes</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* TABLE */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -82,6 +167,7 @@ const handleDelete = async (slug) => {
           {categories.map((cat) => (
             <TableRow key={cat._id}>
               <TableCell className="font-medium">{cat.name}</TableCell>
+
               <TableCell>
                 <img
                   src={cat.image}
@@ -91,26 +177,20 @@ const handleDelete = async (slug) => {
               </TableCell>
 
               <TableCell>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline">Edit</Button>
-                  </DialogTrigger>
-
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Edit Category</DialogTitle>
-                    </DialogHeader>
-
-                    {/* You will connect backend update here */}
-                    <p>Edit form coming here...</p>
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedCat(cat);
+                    setOpen(true);
+                  }}
+                >
+                  Edit
+                </Button>
               </TableCell>
 
               <TableCell>
                 <Button
                   variant="destructive"
-                  className = "bg-green-500"
                   onClick={() => handleDelete(cat.slug)}
                 >
                   Delete
