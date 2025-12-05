@@ -61,11 +61,7 @@ export function CreateCategory() {
         console.log(sendToBackend.data);
       }
     } catch (error) {
-      if (error.response?.status === 401) {
-        console.log("You must login first!");
-      } else {
         console.log(error.response?.data?.message || "Something went wrong");
-      }
     } finally {
       setLoading(false);
     }

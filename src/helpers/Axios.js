@@ -19,12 +19,10 @@ api.interceptors.request.use(
         }
 
         const accessToken = localStorage.getItem("accessToken");
-
         if (!accessToken) {
             console.warn("Token is missing");
             return config;
         }
-
         config.headers.Authorization = `Bearer ${accessToken}`;
         return config;
     },
@@ -38,15 +36,16 @@ api.interceptors.request.use(
 // =============================
 api.interceptors.response.use(
     (res) => res,
-    (error) => {
+    async (error) => {
         const status = error.response?.status;
+        const message = error.response?.data?.message;
 
-        if (status === 401) {
-            console.warn("Unauthorized: Please login first.");
-            console.log("You are not logged in. Please login first.");
+        console.log("⚠️ AXIOS ERROR STATUS:", status);
+        console.log("⚠️ AXIOS ERROR MESSAGE:", message);
 
-            // Optional redirect
-            // window.location.href = "/login";
+        // If token is expired — just show the error now
+        if (status === 401 && message === "Token is invalid or expired") {
+            console.error("🔥 ACCESS TOKEN EXPIRED 🔥");
         }
 
         return Promise.reject(error);
