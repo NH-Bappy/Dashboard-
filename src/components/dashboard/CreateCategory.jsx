@@ -61,7 +61,7 @@ export function CreateCategory() {
         console.log(sendToBackend.data);
       }
     } catch (error) {
-        console.log(error.response?.data?.message || "Something went wrong");
+        console.log(error.response?.data?.message || "Something went wrong" ,error);
     } finally {
       setLoading(false);
     }

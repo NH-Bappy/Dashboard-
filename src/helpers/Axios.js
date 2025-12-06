@@ -23,7 +23,8 @@ api.interceptors.request.use(
             console.warn("Token is missing");
             return config;
         }
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers.authorization = `Bearer ${accessToken}`;
+
         return config;
     },
     function (error) {
@@ -37,17 +38,44 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (res) => res,
     async (error) => {
-        const status = error.response?.status;
-        const message = error.response?.data?.message;
+        const status = error.response?.status
 
-        console.log("⚠️ AXIOS ERROR STATUS:", status);
-        console.log("⚠️ AXIOS ERROR MESSAGE:", message);
 
-        // If token is expired — just show the error now
-        if (status === 401 && message === "Token is invalid or expired") {
-            console.error("🔥 ACCESS TOKEN EXPIRED 🔥");
+        // Token expired
+        try {
+            const originalRequest = error.config;
+            // const Response = error.response;
+            // const status = error.response.status;
+            // console.log("error from response interceptors:", error, config, response)
+            if (status == 403 && !originalRequest._retry){
+                originalRequest._retry = true
+
+                const response = await axios.post(
+                    `${import.meta.env.VITE_BASE_DOMAIN}/${import.meta.env.VITE_BASE_URL}/auth/refresh-token`,
+                    {},
+                    { withCredentials: true }
+                );
+                if (response.status === 200) {
+                    const newToken = response.data.data.accessToken;
+
+                    // store new token
+                    localStorage.setItem("accessToken", newToken);
+
+                    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+
+                    // update original request header (important!)
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+                    // retry original request with updated token
+                    return api(originalRequest);
+                }
+
+
+                // console.log("token expires that's why you see the error", response.data.data.accessToken)
+            }
+        } catch (error) {
+            return Promise.reject(error)
         }
-
         return Promise.reject(error);
     }
 );
