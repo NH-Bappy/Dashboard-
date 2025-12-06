@@ -74,6 +74,8 @@ api.interceptors.response.use(
                 // console.log("token expires that's why you see the error", response.data.data.accessToken)
             }
         } catch (error) {
+            localStorage.removeItem("accessToken")
+            window.location("/login")
             return Promise.reject(error)
         }
         return Promise.reject(error);
