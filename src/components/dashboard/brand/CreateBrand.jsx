@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { createBrand } from "../../../hooks/api";
 
 // Validation schema using zod
 const currentYear = new Date().getFullYear();
@@ -47,9 +47,8 @@ export default function CreateBrand() {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "iPhone",
+      name: "",
       since: 2005,
-      description: "This is my field.",
       image: undefined,
     },
   });
@@ -80,21 +79,20 @@ export default function CreateBrand() {
     return () => URL.revokeObjectURL(url);
   }, [watchedImage]);
 
+
+
+  const brand = createBrand(() => form.reset())
   async function onSubmit(values) {
     // normalize image field to a single File or undefined
     const file = values.image instanceof FileList ? values.image[0] : values.image;
-
-    // Example: client-side validation for file size (optional)
     if (file && file.size > 5 * 1024 * 1024) {
       console.log("Image is too large (max 5 MB)");
       return;
     }
 
+    brand.mutate(values);
 
-
-
-
-
+    // console.log(values.image[0]);
 
 
   }
@@ -168,7 +166,7 @@ export default function CreateBrand() {
 
             <div className="flex items-center justify-end gap-2">
               <Button type="submit" disabled={isSubmitting}>
-                Save
+                {brand.isPending ? "loading..." : "create Brand"}
               </Button>
             </div>
           </form>

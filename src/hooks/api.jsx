@@ -45,3 +45,39 @@ export const createSubcategory = (reset) => {
     },
   });
 };
+
+export const createBrand = (reset) => {
+  return useMutation({
+    mutationFn: (value) => {
+      const imagePath = value.image[0];
+      //Because normal JSON cannot send files (images).
+      //We use FormData() because it is the only way to upload files + text together.
+      const payload = new FormData();
+      payload.append("name", value.name);
+      payload.append("since", value.since);
+      payload.append("image", imagePath);
+      return api.post("/brand/add-brand", payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
+    onError: (error, variables, onMutateResult, context) => {
+      // An error happened!
+      console.log(error);
+      console.log(`rolling back optimistic update with id ${onMutateResult}`);
+    },
+    onSuccess: (data) => {
+      console.log("brand created successfully",data);
+    },
+    onSettled: () => {
+      reset()
+    },
+  });
+}
+
+
+
+
+
+
