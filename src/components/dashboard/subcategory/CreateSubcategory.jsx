@@ -23,6 +23,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { createSubcategory, getallCategoryForSubcategory } from "../../../hooks/api";
 
 // -------- ZOD Schema --------
 const formSchema = z.object({
@@ -33,17 +34,6 @@ const formSchema = z.object({
 const CreateSubcategory = () => {
   const [categories, setCategories] = useState([]);
 
-  // Example: Fetch category list from backend
-  useEffect(() => {
-    const fetchCategory = async () => {
-      const res = await fetch("http://localhost:5000/api/category/all");
-      const data = await res.json();
-      setCategories(data);
-    };
-
-    fetchCategory();
-  }, []);
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,9 +42,23 @@ const CreateSubcategory = () => {
     },
   });
 
-  const onSubmit = (values) => {
-    console.log("Submitted Data:", values);
+  const {data , isPending, isError ,error ,refetch} = getallCategoryForSubcategory()
+  // console.log(allObject)
+  const subcategory = createSubcategory(() => form.reset())
+  if(isPending) return <div>Loading...</div>
+  if(error) return <div>Error loading category</div>
+  if(isError) return <div>isError is  valid</div>
+
+  // console.log(data.data);
+
+
+
+
+  const onSubmit = (data) => {
+    // console.log("Submitted Data:", data);
     // API CALL HERE
+    subcategory.mutate(data);
+
   };
 
   return (
@@ -86,6 +90,7 @@ const CreateSubcategory = () => {
               <FormItem>
                 <FormLabel>* Category</FormLabel>
                 <Select
+                  disabled={isPending}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -96,7 +101,7 @@ const CreateSubcategory = () => {
                   </FormControl>
 
                   <SelectContent>
-                    {categories.map((cat) => (
+                    {data.data.map((cat) => (
                       <SelectItem key={cat._id} value={cat._id}>
                         {cat.name}
                       </SelectItem>
@@ -109,8 +114,12 @@ const CreateSubcategory = () => {
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Create Subcategory
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={subcategory.isPending}
+          >
+            {subcategory.isPending ? "loading..." : "Create Subcategory"}
           </Button>
         </form>
       </Form>
