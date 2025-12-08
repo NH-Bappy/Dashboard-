@@ -10,6 +10,7 @@ import { SignupForm } from "./components/signup-form";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ToastContainer, toast } from "react-toastify";
 import {
   useQuery,
   useMutation,
@@ -32,9 +33,12 @@ const queryClient = new QueryClient();
             <Route path="/" element={<Home />}>
               <Route path="/create-category" element={<CreateCategory />} />
               <Route path="/category-list" element={<CategoryList />} />
-              <Route path="/create-subcategory" element={<CreateSubcategory />}/>
-              <Route path="/subcategory-list" element={<SubcategoryList/>} />
-              <Route path="/create-brand" element={<CreateBrand/>} />
+              <Route
+                path="/create-subcategory"
+                element={<CreateSubcategory />}
+              />
+              <Route path="/subcategory-list" element={<SubcategoryList />} />
+              <Route path="/create-brand" element={<CreateBrand />} />
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}
@@ -43,6 +47,7 @@ const queryClient = new QueryClient();
           </Routes>
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} />,
+        <ToastContainer />
       </QueryClientProvider>
     </>
   );

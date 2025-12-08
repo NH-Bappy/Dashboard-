@@ -6,8 +6,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { api } from "../helpers/Axios";
+import {sendSuccessToast} from "../helpers/toast"
 const queryClient = new QueryClient()
-
 
 //get all category for subcategory
 export const getallCategoryForSubcategory = () => {
@@ -69,6 +69,7 @@ export const createBrand = (reset) => {
     },
     onSuccess: (data) => {
       console.log("brand created successfully",data);
+      sendSuccessToast("brand created successfully")
     },
     onSettled: () => {
       reset()
