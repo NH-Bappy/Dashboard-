@@ -16,7 +16,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { api } from "../../helpers/Axios";
+import { api } from "../../../helpers/Axios";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);

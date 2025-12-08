@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { api } from "../../helpers/Axios";
+import { api } from "../../../helpers/Axios";
 import { useState } from "react";
 
 // ---- Zod Schema ----

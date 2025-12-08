@@ -1,6 +1,8 @@
-import CategoryList from "./components/dashboard/CategoryList";
-import { CreateCategory } from "./components/dashboard/CreateCategory";
+import CategoryList from "./components/dashboard/category/CategoryList";
+import { CreateCategory } from "./components/dashboard/category/CreateCategory";
 import CreateSubcategory from "./components/dashboard/subcategory/CreateSubcategory";
+
+
 
 // import { CategoryList } from "./components/dashboard/CategoryList"
 import { LoginForm } from "./components/login-form";
@@ -15,6 +17,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import SubcategoryList from "./components/dashboard/subcategory/subcategoryList";
+import CreateBrand from "./components/dashboard/brand/CreateBrand";
 function App() {
 const queryClient = new QueryClient();
 
@@ -28,14 +32,9 @@ const queryClient = new QueryClient();
             <Route path="/" element={<Home />}>
               <Route path="/create-category" element={<CreateCategory />} />
               <Route path="/category-list" element={<CategoryList />} />
-              <Route
-                path="/create-subcategory"
-                element={<CreateSubcategory />}
-              />
-              <Route
-                path="/subcategory-list"
-                element={"hello subcategory world"}
-              />
+              <Route path="/create-subcategory" element={<CreateSubcategory />}/>
+              <Route path="/subcategory-list" element={<SubcategoryList/>} />
+              <Route path="/create-brand" element={<CreateBrand/>} />
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}
