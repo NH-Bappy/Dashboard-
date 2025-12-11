@@ -77,8 +77,16 @@ export const createBrand = (reset) => {
   });
 }
 
+// get all brand
 
-
-
+export const getAllBrand = () => {
+  return useQuery({
+    queryKey:["getAllBrand"],
+    queryFn: async () => {
+      const allData = await api.get("brand/all-brand");
+      return allData.data;
+    }
+  })
+}
 
 

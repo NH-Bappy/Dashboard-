@@ -96,7 +96,7 @@ const data = {
         },
         {
           title: "Brand List",
-          url: "#",
+          url: "find-all-brand",
         },
       ],
     },

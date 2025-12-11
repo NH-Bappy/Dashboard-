@@ -20,6 +20,7 @@ import {
 } from "@tanstack/react-query";
 import SubcategoryList from "./components/dashboard/subcategory/subcategoryList";
 import CreateBrand from "./components/dashboard/brand/CreateBrand";
+import BrandList from "./components/dashboard/brand/BrandList";
 function App() {
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const queryClient = new QueryClient();
               />
               <Route path="/subcategory-list" element={<SubcategoryList />} />
               <Route path="/create-brand" element={<CreateBrand />} />
+              <Route path="/find-all-brand" element={<BrandList />} />
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}
