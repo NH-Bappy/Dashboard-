@@ -11,6 +11,8 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
+  Projector,
+  ProjectorIcon,
   Settings2,
   SquareTerminal,
 } from "lucide-react"
@@ -97,6 +99,22 @@ const data = {
         {
           title: "Brand List",
           url: "find-all-brand",
+        },
+      ],
+    },
+    {
+      title: "product",
+      url: "#",
+      icon: ProjectorIcon,
+      isActive: true,
+      items: [
+        {
+          title: "create-product",
+          url: "create-product",
+        },
+        {
+          title: "Product-List",
+          url: "#",
         },
       ],
     },

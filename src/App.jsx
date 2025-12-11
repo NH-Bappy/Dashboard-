@@ -1,13 +1,11 @@
 import CategoryList from "./components/dashboard/category/CategoryList";
-import { CreateCategory } from "./components/dashboard/category/CreateCategory";
 import CreateSubcategory from "./components/dashboard/subcategory/CreateSubcategory";
 
 
 
 // import { CategoryList } from "./components/dashboard/CategoryList"
-import { LoginForm } from "./components/login-form";
-import { SignupForm } from "./components/signup-form";
-import Home from "./pages/Home";
+// import { LoginForm } from "./components/login-form";
+
 import { BrowserRouter, Routes, Route } from "react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,6 +19,23 @@ import {
 import SubcategoryList from "./components/dashboard/subcategory/subcategoryList";
 import CreateBrand from "./components/dashboard/brand/CreateBrand";
 import BrandList from "./components/dashboard/brand/BrandList";
+import CreateProduct from "./components/dashboard/product/CreateProduct";
+import React, { Suspense } from "react";
+const Home = React.lazy(() => import("./pages/Home"));
+const LoginForm = React.lazy(() =>
+  import("./components/login-form").then((c) => ({ default: c.LoginForm }))
+);
+const SignupForm = React.lazy(() =>
+  import("./components/signup-form").then((c) => ({ default: c.SignupForm }))
+);
+const CreateCategory = React.lazy(() =>
+  import("./components/dashboard/category/CreateCategory").then((c) => ({
+    default: c.CreateCategory,
+  }))
+);
+
+
+// React.lazy for fast loading
 function App() {
 const queryClient = new QueryClient();
 
@@ -41,10 +56,19 @@ const queryClient = new QueryClient();
               <Route path="/subcategory-list" element={<SubcategoryList />} />
               <Route path="/create-brand" element={<CreateBrand />} />
               <Route path="/find-all-brand" element={<BrandList />} />
+              <Route path="/create-product" element={<CreateProduct />} />
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}
-            <Route path="/Login" element={<LoginForm />} />
+            <Route
+              path="/Login"
+              element={
+                <Suspense fallback={<h1>loading...</h1>}>
+                  <LoginForm />
+                </Suspense>
+              }
+            />
+
             <Route path="/SingUp" element={<SignupForm />} />
           </Routes>
         </BrowserRouter>
