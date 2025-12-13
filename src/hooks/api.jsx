@@ -78,7 +78,6 @@ export const createBrand = (reset) => {
 }
 
 // get all brand
-
 export const getAllBrand = () => {
   return useQuery({
     queryKey:["getAllBrand"],

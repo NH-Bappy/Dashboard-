@@ -19,8 +19,9 @@ import {
 import SubcategoryList from "./components/dashboard/subcategory/subcategoryList";
 import CreateBrand from "./components/dashboard/brand/CreateBrand";
 import BrandList from "./components/dashboard/brand/BrandList";
-import CreateProduct from "./components/dashboard/product/CreateProduct";
 import React, { Suspense } from "react";
+import CreateProduct from "./components/dashboard/product/CreateProduct";
+
 const Home = React.lazy(() => import("./pages/Home"));
 const LoginForm = React.lazy(() =>
   import("./components/login-form").then((c) => ({ default: c.LoginForm }))
