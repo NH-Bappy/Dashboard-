@@ -90,14 +90,12 @@ export const getAllBrand = () => {
 };
 
 // create product
-
 export const createProductService = (reset) => {
   return useMutation({
     mutationFn: (value) => {
       const formData = new FormData();
 
       for (let key in value) {
-        // ✅ IMAGES
         if (key === "image") {
           const imageArray = value[key];
           if (imageArray && imageArray.length > 0) {
@@ -105,10 +103,7 @@ export const createProductService = (reset) => {
               formData.append("image", imageArray[i]);
             }
           }
-        }
-
-        // ✅ ALL OTHER FIELDS
-        else {
+        } else {
           formData.append(key, value[key]);
         }
       }
@@ -133,3 +128,19 @@ export const createProductService = (reset) => {
   });
 };
 
+// get product
+
+export const getProductService = (type) => {
+  return useQuery({
+    queryKey: [`${type} product`],
+    queryFn: async () => {
+      if (type) {
+        const allValue = await api.get(`/product/find-all-product?ptype=${type}`);
+        return allValue.data;
+      } else {
+        const allValue = await api.get("/product/find-all-product");
+        return allValue.data;
+      }
+    },
+  });
+};

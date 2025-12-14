@@ -21,6 +21,7 @@ import CreateBrand from "./components/dashboard/brand/CreateBrand";
 import BrandList from "./components/dashboard/brand/BrandList";
 import React, { Suspense } from "react";
 import CreateProduct from "./components/dashboard/product/CreateProduct";
+import ProductList from "./components/dashboard/product/ProductList";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const LoginForm = React.lazy(() =>
@@ -58,6 +59,7 @@ const queryClient = new QueryClient();
               <Route path="/create-brand" element={<CreateBrand />} />
               <Route path="/find-all-brand" element={<BrandList />} />
               <Route path="/create-product" element={<CreateProduct />} />
+              <Route path="/productList" element={<ProductList />} />
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}

@@ -141,7 +141,7 @@ const [subcategoryList , setSubcategoryList] = useState([])
 
   
   const onSubmit = (values) => {
-    console.log(values);
+    // console.log(values);
     form.reset();
     productService.mutate(values);
 
