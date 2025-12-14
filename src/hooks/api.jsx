@@ -6,8 +6,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { api } from "../helpers/Axios";
-import {sendSuccessToast} from "../helpers/toast"
-const queryClient = new QueryClient()
+import { sendSuccessToast } from "../helpers/toast";
+const queryClient = new QueryClient();
 
 //get all category for subcategory
 export const getallCategoryForSubcategory = () => {
@@ -25,11 +25,12 @@ export const createSubcategory = (reset) => {
   return useMutation({
     queryKey: ["createSubcategoryQueryKey"],
     mutationFn: (data) => {
-      return api.post("/subcategory/create-subcategory", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      console.log(data);
+      // return api.post("/subcategory/create-subcategory", data, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
     },
     onError: (error, variables, onMutateResult, context) => {
       // An error happened!
@@ -41,7 +42,7 @@ export const createSubcategory = (reset) => {
     },
     onSettled: (data, error, variables, onMutateResult, context) => {
       // Error or success... doesn't matter!
-      reset()
+      reset();
     },
   });
 };
@@ -68,24 +69,67 @@ export const createBrand = (reset) => {
       console.log(`rolling back optimistic update with id ${onMutateResult}`);
     },
     onSuccess: (data) => {
-      console.log("brand created successfully",data);
-      sendSuccessToast("brand created successfully")
+      console.log("brand created successfully", data);
+      sendSuccessToast("brand created successfully");
     },
     onSettled: () => {
-      reset()
+      reset();
     },
   });
-}
+};
 
 // get all brand
 export const getAllBrand = () => {
   return useQuery({
-    queryKey:["getAllBrand"],
+    queryKey: ["getAllBrand"],
     queryFn: async () => {
       const allData = await api.get("brand/all-brand");
       return allData.data;
-    }
-  })
-}
+    },
+  });
+};
 
+// create product
+
+export const createProductService = (reset) => {
+  return useMutation({
+    mutationFn: (value) => {
+      const formData = new FormData();
+
+      for (let key in value) {
+        // ✅ IMAGES
+        if (key === "image") {
+          const imageArray = value[key];
+          if (imageArray && imageArray.length > 0) {
+            for (let i = 0; i < imageArray.length; i++) {
+              formData.append("image", imageArray[i]);
+            }
+          }
+        }
+
+        // ✅ ALL OTHER FIELDS
+        else {
+          formData.append(key, value[key]);
+        }
+      }
+
+      return api.post("/product/Add-product", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+    },
+
+    onError: (error) => {
+      console.error("Create product error:", error.response?.data || error);
+    },
+
+    onSuccess: (data) => {
+      console.log(data);
+      sendSuccessToast("Product created successfully");
+      reset(); // reset only on success
+    },
+  });
+};
 

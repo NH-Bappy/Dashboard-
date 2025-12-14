@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { getAllBrand, getallCategoryForSubcategory } from "../../../hooks/api";
+import { createProductService, getAllBrand, getallCategoryForSubcategory } from "../../../hooks/api";
 import { useEffect, useState } from "react";
 
 // ---------------------------------------------
@@ -29,13 +29,13 @@ const schema = z.object({
   subCategory: z.string(),
   brand: z.string(),
 
-  tag: z.array(z.string()).default([]),
+  // tag: z.array(z.string() ).default([]),
 
   manufactureCountry: z.string(),
   rating: z.coerce.number().min(0).max(5),
 
   warrantyInformation: z.string().optional(),
-  warrentyexpires: z.string(),
+  warrantyExpires: z.string(),
 
   shippingInformation: z.string(),
   sku: z.string(),
@@ -73,11 +73,11 @@ export default function CreateProduct() {
       category: "",
       subCategory: "",
       brand: "",
-      tag: [],
+      // tag: [],
       manufactureCountry: "",
       rating: 0,
       warrantyInformation: "",
-      warrentyexpires: "",
+      warrantyExpires: "",
       shippingInformation: "",
       sku: "",
       groupUnit: "Box",
@@ -107,10 +107,14 @@ const [subcategoryList , setSubcategoryList] = useState([])
 
 
 
-
   // get all brand
   const {data: brandData , isPending: brandPending} = getAllBrand();
   // console.log(brandData.data);
+
+
+// fetch api
+  const productService = createProductService(() => form.reset())
+
 
 
 
@@ -139,7 +143,7 @@ const [subcategoryList , setSubcategoryList] = useState([])
   const onSubmit = (values) => {
     console.log(values);
     form.reset();
-
+    productService.mutate(values);
 
 
 
@@ -338,7 +342,7 @@ const [subcategoryList , setSubcategoryList] = useState([])
         />
         <FormField
           control={form.control}
-          name="warrentyexpires"
+          name="warrantyExpires"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Warranty Expires</FormLabel>
@@ -432,7 +436,9 @@ const [subcategoryList , setSubcategoryList] = useState([])
             </FormItem>
           )}
         />
-        <Button type="submit">Create Product</Button>
+        <Button type="submit">
+          {productService.isPending ? "loading..." : "Create Product"}
+        </Button>
       </form>
     </Form>
   );
