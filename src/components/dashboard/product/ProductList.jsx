@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProductService } from "../../../hooks/api";
+import { Link } from "react-router";
 
 export default function ProductList() {
 
@@ -19,7 +20,7 @@ export default function ProductList() {
     const { data, isPending, isError, error, refetch } =
     getProductService("single");
 
-    console.log(data?.data)
+    // console.log(data?.data)
 
 
 
@@ -41,37 +42,45 @@ export default function ProductList() {
           </TableHeader>
 
           <TableBody>
-            {/* Row 1 */}
-            <TableRow>
-              <TableCell>
-                <Avatar className="h-10 w-10 rounded-lg">
-                  <AvatarImage src="https://via.placeholder.com/80" />
-                  <AvatarFallback>P</AvatarFallback>
-                </Avatar>
-              </TableCell>
-              <TableCell className="font-medium">Sample Product</TableCell>
-              <TableCell className="text-right">
-                <Button size="sm" variant="outline">
-                  View
-                </Button>
-              </TableCell>
-            </TableRow>
+            {isPending && (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center">
+                  Loading...
+                </TableCell>
+              </TableRow>
+            )}
 
-            {/* Row 2 */}
-            <TableRow>
-              <TableCell>
-                <Avatar className="h-10 w-10 rounded-lg">
-                  <AvatarImage src="https://via.placeholder.com/80" />
-                  <AvatarFallback>P</AvatarFallback>
-                </Avatar>
-              </TableCell>
-              <TableCell className="font-medium">Another Product</TableCell>
-              <TableCell className="text-right">
-                <Button size="sm" variant="outline">
-                  View
-                </Button>
-              </TableCell>
-            </TableRow>
+            {isError && (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center text-red-500">
+                  {error.message}
+                </TableCell>
+              </TableRow>
+            )}
+
+            {data?.data?.map((product) => (
+              <TableRow key={product._id}>
+                {/* Image */}
+                <TableCell>
+                  <Avatar className="h-10 w-10 rounded-lg">
+                    <AvatarImage src={product.image} />
+                    <AvatarFallback>{product.name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </TableCell>
+
+                {/* Name */}
+                <TableCell className="font-medium">{product.name}</TableCell>
+
+                {/* Action */}
+                <TableCell className="text-right">
+                  <Link to={`/product-details/${product.slug}`}>
+                    <Button size="sm" variant="outline">
+                      View
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>

@@ -144,3 +144,20 @@ export const getProductService = (type) => {
     },
   });
 };
+
+
+// get single product
+
+export const getSingleProduct = (slug) => {
+  return useQuery({
+    queryKey: ["singleProduct", slug],
+    queryFn: async () => {
+      const res = await api.get("/product/find-Single-Product", {
+        params: { slug },
+      });
+      return res.data;
+    },
+    enabled: !!slug,
+  });
+};
+

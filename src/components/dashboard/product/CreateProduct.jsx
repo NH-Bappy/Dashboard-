@@ -26,8 +26,8 @@ const schema = z.object({
   description: z.string().min(10),
 
   category: z.string(),
-  subCategory: z.string(),
-  brand: z.string(),
+  subCategory: z.string().nullable().optional(),
+  brand: z.string().nullable().optional(),
 
   // tag: z.array(z.string() ).default([]),
 
@@ -122,14 +122,25 @@ const [subcategoryList , setSubcategoryList] = useState([])
 
 
   // find category selected subcategory ID
-  useEffect(() => {
-    if (form.watch("category")) {
-      const selectedCategory = categoryData?.data?.find(
-        (item) => item._id == form.watch("category")
-      );
-      setSubcategoryList(selectedCategory?.subCategory || []);
-    }
-  }, [form.watch("category"), categoryData]);
+useEffect(() => {
+  const categoryId = form.watch("category");
+
+  if (!categoryId) {
+    setSubcategoryList([]);
+    form.setValue("subCategory", null);
+    return;
+  }
+
+  const selectedCategory = categoryData?.data?.find(
+    (item) => item._id === categoryId
+  );
+
+  setSubcategoryList(selectedCategory?.subCategory ?? []);
+
+  // reset subCategory when category changes
+  form.setValue("subCategory", null);
+}, [form.watch("category"), categoryData]);
+
 
 
 
@@ -252,9 +263,16 @@ const [subcategoryList , setSubcategoryList] = useState([])
               <FormControl>
                 <select
                   className="border p-2 w-full rounded"
-                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === "" ? null : e.target.value
+                    )
+                  }
                   disabled={subcategoryList.length === 0}
                 >
+                  <option value="">No Sub Category</option>
+
                   {subcategoryList.map((sub) => (
                     <option key={sub._id} value={sub._id}>
                       {sub.name}
