@@ -7,6 +7,7 @@ import {
   BookOpen,
   Bot,
   Command,
+  Folders,
   Frame,
   GalleryVerticalEnd,
   Map,
@@ -102,6 +103,7 @@ const data = {
         },
       ],
     },
+
     {
       title: "product",
       url: "#",
@@ -116,6 +118,23 @@ const data = {
           title: "Product-List",
           url: "productList",
         },
+      ],
+    },
+
+    {
+      title: "variant",
+      url: "create-variant-product",
+      icon: Folders,
+      isActive: true,
+      items: [
+        {
+          title: "create-variant-product",
+          url: "create-variant-product",
+        },
+        // {
+        //   title: "Product-List",
+        //   url: "productList",
+        // },
       ],
     },
 

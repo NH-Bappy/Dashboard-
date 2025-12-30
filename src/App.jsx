@@ -23,6 +23,8 @@ import React, { Suspense } from "react";
 import CreateProduct from "./components/dashboard/product/CreateProduct";
 import ProductList from "./components/dashboard/product/ProductList";
 import ProductDetails from "./components/dashboard/product/productDetails";
+import CreateVariantProduct from "./components/dashboard/variantProduct/CreateVariantProduct";
+
 
 const Home = React.lazy(() => import("./pages/Home"));
 const LoginForm = React.lazy(() =>
@@ -62,6 +64,12 @@ const queryClient = new QueryClient();
               <Route path="/create-product" element={<CreateProduct />} />
               <Route path="/productList" element={<ProductList />} />
               <Route path="/product-details/:slug" element={<ProductDetails />} />
+
+
+              <Route path="/create-variant-product" element={<CreateVariantProduct/>} />
+
+              {/* <Route path="/productList" element={<ProductList />} />
+              <Route path="/product-details/:slug" element={<ProductDetails />} /> */}
               <Route path="*" element={"not found"} />
             </Route>
             {/* auth */}
