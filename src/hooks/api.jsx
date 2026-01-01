@@ -161,3 +161,15 @@ export const getSingleProduct = (slug) => {
   });
 };
 
+
+// delete product
+
+export const deleteProduct = (onSuccess) => {
+  return useMutation({
+    mutationFn: async (slug) => {
+      const res = await api.delete(`/product/product-delete/${slug}`);
+      return res.data;
+    },
+    onSuccess,
+  });
+};

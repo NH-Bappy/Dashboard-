@@ -24,6 +24,7 @@ import CreateProduct from "./components/dashboard/product/CreateProduct";
 import ProductList from "./components/dashboard/product/ProductList";
 import ProductDetails from "./components/dashboard/product/productDetails";
 import CreateVariantProduct from "./components/dashboard/variantProduct/CreateVariantProduct";
+import MultipleVariantList from "./components/dashboard/variantProduct/multipleVariantList";
 
 
 const Home = React.lazy(() => import("./pages/Home"));
@@ -63,10 +64,19 @@ const queryClient = new QueryClient();
               <Route path="/find-all-brand" element={<BrandList />} />
               <Route path="/create-product" element={<CreateProduct />} />
               <Route path="/productList" element={<ProductList />} />
-              <Route path="/product-details/:slug" element={<ProductDetails />} />
+              <Route
+                path="/product-details/:slug"
+                element={<ProductDetails />}
+              />
 
-
-              <Route path="/create-variant-product" element={<CreateVariantProduct/>} />
+              <Route
+                path="/create-variant-product"
+                element={<CreateVariantProduct />}
+              />
+              <Route
+                path="/multiple-Variant-List"
+                element={<MultipleVariantList />}
+              />
 
               {/* <Route path="/productList" element={<ProductList />} />
               <Route path="/product-details/:slug" element={<ProductDetails />} /> */}

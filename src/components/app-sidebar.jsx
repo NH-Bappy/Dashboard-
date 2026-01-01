@@ -131,10 +131,10 @@ const data = {
           title: "create-variant-product",
           url: "create-variant-product",
         },
-        // {
-        //   title: "Product-List",
-        //   url: "productList",
-        // },
+        {
+          title: "multiple-Variant-List",
+          url: "multiple-Variant-List",
+        },
       ],
     },
 
