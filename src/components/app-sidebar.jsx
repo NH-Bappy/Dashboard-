@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   AudioWaveform,
+  Barcode,
   BetweenHorizontalEnd,
   BookOpen,
   Bot,
@@ -59,7 +60,7 @@ const data = {
       title: "Category",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Create-category",
@@ -75,7 +76,7 @@ const data = {
       title: "Subcategory",
       url: "#",
       icon: BetweenHorizontalEnd,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Create-subcategory",
@@ -91,7 +92,7 @@ const data = {
       title: "Brand",
       url: "#",
       icon: Bot,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "create-Brand",
@@ -108,7 +109,7 @@ const data = {
       title: "product",
       url: "#",
       icon: ProjectorIcon,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "create-product",
@@ -122,18 +123,34 @@ const data = {
     },
 
     {
-      title: "variant",
+      title: "variant-product",
       url: "create-variant-product",
       icon: Folders,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "create-variant-product",
           url: "create-variant-product",
         },
         {
-          title: "multiple-Variant-List",
+          title: "variant-product-List",
           url: "multiple-Variant-List",
+        },
+      ],
+    },
+    {
+      title: "variant",
+      url: "create-variant",
+      icon: Barcode,
+      isActive: true,
+      items: [
+        {
+          title: "create-variant",
+          url: "create-variant",
+        },
+        {
+          title: "Variant-List",
+          url: "variant-list",
         },
       ],
     },

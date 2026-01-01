@@ -26,6 +26,9 @@ import ProductDetails from "./components/dashboard/product/productDetails";
 import CreateVariantProduct from "./components/dashboard/variantProduct/CreateVariantProduct";
 import MultipleVariantList from "./components/dashboard/variantProduct/multipleVariantList";
 
+import VariantList from "./components/dashboard/variant/VariantList";
+import CreateVariant from "./components/dashboard/variant/CreateVariant";
+
 
 const Home = React.lazy(() => import("./pages/Home"));
 const LoginForm = React.lazy(() =>
@@ -76,6 +79,16 @@ const queryClient = new QueryClient();
               <Route
                 path="/multiple-Variant-List"
                 element={<MultipleVariantList />}
+              />
+
+
+              <Route
+                path="/create-variant"
+                element={<CreateVariant />}
+              />
+              <Route
+                path="/variant-list"
+                element={<VariantList />}
               />
 
               {/* <Route path="/productList" element={<ProductList />} />
