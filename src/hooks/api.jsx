@@ -173,3 +173,49 @@ export const deleteProduct = (onSuccess) => {
     onSuccess,
   });
 };
+
+
+//varian api 
+
+export const createVariant = (reset) => {
+  return useMutation({
+    mutationFn: (value) => {
+      const formData = new FormData();
+
+      for (let key in value) {
+        if (key === "image") {
+          const imageArray = value[key];
+          if (imageArray && imageArray.length > 0) {
+            for (let i = 0; i < imageArray.length; i++) {
+              formData.append("image", imageArray[i]);
+            }
+          }
+        } else {
+          formData.append(key, value[key]);
+        }
+      }
+
+      return api.post("variant/create-new-variant", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+    },
+
+    onError: (error) => {
+      console.error("Create product error:", error.response?.data || error);
+    },
+
+    onSuccess: (data) => {
+      console.log(data);
+      sendSuccessToast("Product created successfully");
+      reset(); // reset only on success
+    },
+  });
+};
+
+
+
+
+

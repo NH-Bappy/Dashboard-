@@ -24,13 +24,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { getProductService } from "../../../hooks/api";
 
 /* ---------------- MOCK PRODUCT DATA ---------------- */
-const products = [
-  { _id: "68d8b89652d7d9474f81e810", name: "iPhone" },
-  { _id: "68d8b89652d7d9474f81e811", name: "Samsung Galaxy" },
-  { _id: "68d8b89652d7d9474f81e812", name: "Pixel Phone" },
-];
 
 /* ---------------- ZOD SCHEMA ---------------- */
 const variantSchema = z.object({
@@ -43,11 +39,14 @@ const variantSchema = z.object({
   alertVariantStock: z.coerce.number(),
   retailPrice: z.coerce.number(),
   wholesalePrice: z.coerce.number(),
-  image: z.any().optional(),
+  sku: z.string().min(1, "SKU is required"),
+  image: z.array(z.any()).optional(),
 });
 
 const CreateVariant = () => {
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState([]);
+  const { data, isPending } = getProductService("multiple");
+  // console.log(data?.data);
 
   const form = useForm({
     resolver: zodResolver(variantSchema),
@@ -57,20 +56,36 @@ const CreateVariant = () => {
       description: "",
       size: "",
       color: "",
+      sku: "",
       stockVariant: 0,
       alertVariantStock: 0,
       retailPrice: 0,
       wholesalePrice: 0,
-      image: null,
+      image: [],
     },
   });
+
+  const products = data?.data || [];
+
+
+  // Auto-generate UNIQUE SKU
+const generateSKU = () => {
+  return `SKU-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+};
+  // Auto-fill SKU when form loads
+  React.useEffect(() => {
+    form.setValue("sku", generateSKU());
+  }, []);
+
+
+
 
   /* ---------------- SUBMIT (NO BACKEND) ---------------- */
   const onSubmit = (values) => {
     console.log("✅ Variant Data:", values);
     alert("Variant created successfully (frontend only)");
     form.reset();
-    setPreview(null);
+    setPreview([]);
   };
 
   return (
@@ -135,7 +150,20 @@ const CreateVariant = () => {
               </FormItem>
             )}
           />
-
+          {/* sku */}
+          <FormField
+            control={form.control}
+            name="sku"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>SKU</FormLabel>
+                <FormControl>
+                  <Input {...field} readOnly />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {/* SIZE */}
           <FormField
             control={form.control}
@@ -230,10 +258,13 @@ const CreateVariant = () => {
                   <Input
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      field.onChange(file);
-                      if (file) setPreview(URL.createObjectURL(file));
+                      const files = Array.from(e.target.files || []);
+                      field.onChange(files);
+                      setPreview(
+                        files.map((file) => URL.createObjectURL(file))
+                      );
                     }}
                   />
                 </FormControl>
@@ -242,12 +273,17 @@ const CreateVariant = () => {
           />
 
           {/* IMAGE PREVIEW */}
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-32 h-32 object-cover rounded border"
-            />
+          {preview.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {preview.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover rounded border"
+                />
+              ))}
+            </div>
           )}
 
           <Button type="submit" className="w-full">
