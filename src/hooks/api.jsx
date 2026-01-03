@@ -209,7 +209,7 @@ export const createVariant = (reset) => {
 
     onSuccess: (data) => {
       console.log(data);
-      sendSuccessToast("Product created successfully");
+      sendSuccessToast("variant created successfully");
       reset(); // reset only on success
     },
   });

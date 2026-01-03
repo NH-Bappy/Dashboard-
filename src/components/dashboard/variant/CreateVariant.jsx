@@ -24,7 +24,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { getProductService } from "../../../hooks/api";
+import { createVariant, getProductService } from "../../../hooks/api";
 
 /* ---------------- MOCK PRODUCT DATA ---------------- */
 
@@ -65,6 +65,7 @@ const CreateVariant = () => {
     },
   });
 
+  const variant = createVariant(() => form.reset());
   const products = data?.data || [];
 
 
@@ -73,19 +74,21 @@ const generateSKU = () => {
   return `SKU-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 };
   // Auto-fill SKU when form loads
-  React.useEffect(() => {
+React.useEffect(() => {
+  if (!form.getValues("sku")) {
     form.setValue("sku", generateSKU());
-  }, []);
+  }
+}, [form]);
 
 
 
 
-  /* ---------------- SUBMIT (NO BACKEND) ---------------- */
+
+
   const onSubmit = (values) => {
-    console.log("✅ Variant Data:", values);
-    alert("Variant created successfully (frontend only)");
-    form.reset();
-    setPreview([]);
+    // console.log("✅ Variant Data:", values);
+  setPreview([]);
+  variant.mutate(values)
   };
 
   return (
@@ -157,13 +160,26 @@ const generateSKU = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>SKU</FormLabel>
+
                 <FormControl>
-                  <Input {...field} readOnly />
+                  <div className="flex gap-2">
+                    <Input {...field} />
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => form.setValue("sku", generateSKU())}
+                    >
+                      Regenerate
+                    </Button>
+                  </div>
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
           />
+
           {/* SIZE */}
           <FormField
             control={form.control}
@@ -287,7 +303,7 @@ const generateSKU = () => {
           )}
 
           <Button type="submit" className="w-full">
-            Create Variant
+            {variant.isPending ? "loading..." : " Create Variant"}
           </Button>
         </form>
       </Form>
