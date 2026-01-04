@@ -215,6 +215,17 @@ export const createVariant = (reset) => {
   });
 };
 
+// get all variant
+
+export const useGetAllVariant = () => {
+  return useQuery({
+    queryKey: ["variants"],
+    queryFn: async () => {
+      const res = await api.get("/variant/find-all");
+      return res.data;
+    },
+  });
+};
 
 
 
